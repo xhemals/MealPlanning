@@ -23,7 +23,7 @@ You will need the following software to run this project:
 
 Follow these steps to install the project:
 
-1. Clone the repository: `git clone https://github.com/user/meal-planning.git`
+1. Clone the repository: `git clone https://github.com/xhemals/MealPlanning.git`
 2. Navigate to the project directory: `cd meal-planning`
 3. Install the dependencies: `pip install -r requirements.txt`
 4. Run the Django migrations: `python manage.py migrate`
