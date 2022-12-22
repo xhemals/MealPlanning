@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% csrf_token %}
+
+{% load crispy_forms_tags %}
+{% crispy form %}
+
+<h3 class="p-3 mb-2 bg-info text-dark" style="text-align: center">Upcoming Meals:</h3>
+<p>
+    {{ events }}
+</p>
+
+{% endblock %}
