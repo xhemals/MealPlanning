@@ -12,15 +12,20 @@ class startForm(forms.Form):
         self.helper = FormHelper(self)
         self.helper.form_method = "POST"
         self.helper.add_input(Submit("submit", "Submit"))
+        self.furthestEvent = datetime.strptime(
+            gCalendar.furthestEvent(), "%Y-%m-%d %H:%M:%S"
+        )
+        self.furthestEvent = self.furthestEvent.date()
+        self.fields["start_planning_from"].widget.attrs.update(
+            {
+                "min": self.furthestEvent + timedelta(days=1),
+            }
+        )
 
-    furthestEvent = datetime.strptime(gCalendar.furthestEvent(), "%Y-%m-%d %H:%M:%S")
-    furthestEvent = furthestEvent.date()
     start_planning_from = forms.DateField(
         widget=forms.DateInput(
             attrs={
                 "type": "date",
-                # "min": (datetime.now().date() + timedelta(days=1)),
-                "min": furthestEvent,
                 "style": "max-width: 150px",
             }
         )

@@ -4,6 +4,7 @@ from MealPlanning.forms import MealForm, startForm
 import datetime
 from datetime import datetime, timedelta
 from . import gCalendar
+from .models import Meal
 
 mealPersons = {
     1: "All",
@@ -23,19 +24,28 @@ def suffix(day):
     return suffix
 
 
-def index(request):
-    date = ""
-    furthest = gCalendar.furthestEvent()
-    print(furthest)
+def mealList():
     events = gCalendar.viewEvent()
     eventsLi = []
+    Meal.objects.all().delete()
     for key, value in events.items():
+        recordDate = datetime.strptime(value["date"], "%Y-%m-%d %H:%M:%S")
+        recordDate = recordDate.date()
+        newRecord = Meal(date=recordDate, meal=value["meal"], calID=value["calID"])
+        newRecord.save()
         inputDate = datetime.strptime(value["date"], "%Y-%m-%d %H:%M:%S")
         ordinal = inputDate.strftime("%A, %B %d") + suffix(inputDate.day)
         eventsLi.append(
-            f"<ul><li style='font-size: 20px;'>{ordinal}<ol style='font-size: 15px;'>{value['meal']}</ol></li></ul>"
+            f"<ul><li class='date'>{ordinal}<ol class='meal'>{value['meal']}</ol></li></ul>"
         )
     event = "".join(eventsLi)
+    return event
+
+
+def index(request):
+    form = startForm()
+    date = ""
+    event = mealList()
     if request.method == "POST":
         if request.POST.get("submit"):
             date = request.POST.get("start_planning_from")
@@ -43,7 +53,7 @@ def index(request):
             request.session["inputDate"] = ""
             request.session["times"] = 0
             return redirect("/planning")
-    context = {"form": startForm, "date": date, "events": event}
+    context = {"form": form, "date": date, "events": event}
     return render(request, "index.html", context)
 
 

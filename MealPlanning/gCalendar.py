@@ -90,6 +90,7 @@ def viewEvent():
                 {
                     "date": f"{dateTime}",
                     "meal": f'{event["summary"]}',
+                    "calID": f'{event["id"]}',
                 }
             )
         return eventDi
