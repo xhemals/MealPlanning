@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% csrf_token %}
+
+{% load crispy_forms_tags %}
+{% crispy form %}
+
+<script src="/static/js/validations.js"></script>
+<script>
+document.getElementById("id_who_is_eating_0").addEventListener("click", disableRest);
+if (document.getElementById("id_who_is_eating_0").checked) {disableOnStart();}
+</script>
+{% endblock %}

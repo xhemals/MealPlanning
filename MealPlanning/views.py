@@ -1,10 +1,12 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from MealPlanning.forms import MealForm, startForm
+from MealPlanning.forms import MealForm, startForm, EditMealForm
 import datetime
 from datetime import datetime, timedelta
 from . import gCalendar
 from .models import Meal
+from django.views.generic import DetailView
+import re
 
 mealPersons = {
     1: "All",
@@ -13,6 +15,56 @@ mealPersons = {
     4: "Josey",
     5: "Toby",
 }
+
+
+class MealView(DetailView):
+    model = Meal
+    template_name = "meal_detail.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["pk"] = self.kwargs.get("pk")
+        form = EditMealForm()
+        fullName = self.object.meal
+        mealName = re.sub("^.*?- ", "", fullName)
+        persons = re.sub(" -.*", "", fullName)
+        persons = re.sub(",", "", persons).split(" ")
+        personsLi = []
+        for x in persons:
+            for key, value in mealPersons.items():
+                if value == x:
+                    personsLi.append(key)
+        form.fields["meal"].initial = mealName
+        form.fields["who_is_eating"].initial = personsLi
+        context["form"] = form
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if request.method == "POST":
+            form = EditMealForm(request.POST)
+            values = form["who_is_eating"].value()
+            meal = form["meal"].value()
+            persons = []
+            for i in values:
+                temp = mealPersons[int(i)]
+                persons.append(temp)
+            persons = ", ".join(map(str, persons))
+            print(persons)
+            if request.POST.get("submit"):
+                gCalendar.editEvent(meal, persons, self.object.eventID)
+                return redirect("/")
+
+        return render(request, "meal_detail.html")
+
+
+def meal(request):
+    if request.method == "POST":
+        if request.POST.get("submit"):
+            print("post")
+    test = MealView.get_context_data()
+    context = {"test": test}
+    return render(request, "meal_detail.html", context)
 
 
 def suffix(day):
@@ -24,19 +76,25 @@ def suffix(day):
     return suffix
 
 
-def mealList():
+def mealToDB():
     events = gCalendar.viewEvent()
-    eventsLi = []
     Meal.objects.all().delete()
     for key, value in events.items():
         recordDate = datetime.strptime(value["date"], "%Y-%m-%d %H:%M:%S")
         recordDate = recordDate.date()
-        newRecord = Meal(date=recordDate, meal=value["meal"], calID=value["calID"])
+        newRecord = Meal(date=recordDate, meal=value["meal"], eventID=value["eventID"])
         newRecord.save()
-        inputDate = datetime.strptime(value["date"], "%Y-%m-%d %H:%M:%S")
-        ordinal = inputDate.strftime("%A, %B %d") + suffix(inputDate.day)
+
+
+def viewMeals():
+    db = Meal.objects.all()
+    eventsLi = []
+    for item in db:
+        ordinal = item.date.strftime("%A, %B %d") + suffix(item.date.day)
         eventsLi.append(
-            f"<ul><li class='date'>{ordinal}<ol class='meal'>{value['meal']}</ol></li></ul>"
+            f"""<ul><li class='date'>{ordinal}
+            <a href='/meal/{item.eventID}'><button type='button' class='btn btn-danger'> edit </button></a> 
+            <ol class='meal'>{item.meal}</ol></li></ul><br>"""
         )
     event = "".join(eventsLi)
     return event
@@ -45,7 +103,8 @@ def mealList():
 def index(request):
     form = startForm()
     date = ""
-    event = mealList()
+    mealToDB()
+    event = viewMeals()
     if request.method == "POST":
         if request.POST.get("submit"):
             date = request.POST.get("start_planning_from")

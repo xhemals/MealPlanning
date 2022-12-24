@@ -90,7 +90,7 @@ def viewEvent():
                 {
                     "date": f"{dateTime}",
                     "meal": f'{event["summary"]}',
-                    "calID": f'{event["id"]}',
+                    "eventID": f'{event["id"]}',
                 }
             )
         return eventDi
@@ -101,12 +101,12 @@ def viewEvent():
 
 def furthestEvent():
     try:
+        service = build("calendar", "v3", credentials=creds())
         today = datetime.date.today()
         today = datetime.datetime.combine(
             today, datetime.time(hour=0, minute=0, second=1)
         )
         startDate = today.isoformat() + "Z"
-        service = build("calendar", "v3", credentials=creds())
         events_result = (
             service.events().list(calendarId=calID, timeMin=startDate).execute()
         )
@@ -127,5 +127,15 @@ def furthestEvent():
         firstEntry = next(iter(eventDi))
         return firstEntry
 
+    except HttpError as error:
+        print("An error occurred: %s" % error)
+
+
+def editEvent(meal, who, eventID):
+    try:
+        service = build("calendar", "v3", credentials=creds())
+        event = service.events().get(calendarId=calID, eventId=eventID).execute()
+        event["summary"] = f"{who} - {meal}"
+        service.events().update(calendarId=calID, eventId=eventID, body=event).execute()
     except HttpError as error:
         print("An error occurred: %s" % error)

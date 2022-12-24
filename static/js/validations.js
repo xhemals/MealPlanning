@@ -20,3 +20,10 @@ $(document).ready(function () {
         }
     });
 });
+
+function disableOnStart() {
+    document.getElementById("id_who_is_eating_1").disabled = true;
+    document.getElementById("id_who_is_eating_2").disabled = true;
+    document.getElementById("id_who_is_eating_3").disabled = true;
+    document.getElementById("id_who_is_eating_4").disabled = true;
+}
