@@ -3,10 +3,9 @@
 {% block content %}
 {% csrf_token %}
 
+<h2>Do you want to delete: <a href="../meal/{{pk}}"> {{ mealName }}</a>?</h2>
 {% load crispy_forms_tags %}
 {% crispy form %}
-
-<script src="/static/js/validations.js"></script>
 
 
 {% endblock %}

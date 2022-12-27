@@ -139,3 +139,11 @@ def editEvent(meal, who, eventID):
         service.events().update(calendarId=calID, eventId=eventID, body=event).execute()
     except HttpError as error:
         print("An error occurred: %s" % error)
+
+
+def deleteEvent(eventID):
+    try:
+        service = build("calendar", "v3", credentials=creds())
+        service.events().delete(calendarId=calID, eventId=eventID).execute()
+    except HttpError as error:
+        print("An error occurred: %s" % error)
