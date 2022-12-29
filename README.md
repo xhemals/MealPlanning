@@ -1,12 +1,14 @@
 # [Meal Planning](MealPlanning/views.py)
 
-This is a Django application that allows users to create a meal plan and view events on a calendar. The app has three main functions:
+This is a Django application that allows users to create a meal plan and view events on a calendar. The app has three main views:
 
 - `index`: The main landing page, which displays a form for users to input a start date for their meal plan.
-- `planning`: A form for users to input details about a specific meal, including the date and who will be eating.
+- `planning`: A form for users to input details about a specific meal, including the date and who will be eating. This view also includes a `MealView` class-based view that displays a detailed page for a specific meal, using the `meal_detail.html` template.
 - `done`: A page that is displayed when the meal planning process is complete.
 
-The `mealPersons` dictionary maps integers to names, and the `suffix` function is used to add the appropriate suffix to a day of the month (e.g. 1st, 2nd, 3rd). The `gCalendar` module is used for interacting with a calendar API, and has functions for viewing events, finding the furthest event in the future, and adding events to the calendar.
+The `mealPersons` dictionary maps integers to names, and the `suffix` function is used to add the appropriate suffix to a day of the month (e.g. 1st, 2nd, 3rd). The `gCalendar` module is used for interacting with a calendar API, and has functions for creating and viewing events, finding the furthest event in the future, and adding events to the calendar.
+
+The app also includes a `Meal` model that stores information about a specific meal, including the date, meal type, and who will be eating.
 
 ## Getting Started
 
@@ -18,6 +20,7 @@ You will need the following software to run this project:
 
 - Python 3
 - Django
+- The dependencies listed in the `requirements.txt` file
 
 ### Installing
 
