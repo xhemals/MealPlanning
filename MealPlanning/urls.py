@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from django.views.generic import DetailView
+from django.views.generic import DetailView, TemplateView
 from .models import Meal
 
 urlpatterns = [
@@ -9,4 +9,5 @@ urlpatterns = [
     path("done/", views.done, name="done"),
     path("meal/<pk>", views.MealView.as_view(), name="meal"),
     path("delete/<pk>", views.DeleteView.as_view(), name="delete"),
+    path("offline/", TemplateView.as_view(template_name="offline.html")),
 ]

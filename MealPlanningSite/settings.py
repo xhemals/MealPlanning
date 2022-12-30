@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "crispy_forms",
     "crispy_bootstrap5",
+    "pwa",
 ]
 
 MIDDLEWARE = [
@@ -134,3 +135,25 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 CSRF_TRUSTED_ORIGINS = ["http://127.0.0.1"]
+
+PWA_SERVICE_WORKER_PATH = os.path.join(BASE_DIR, "static/js", "serviceworker.js")
+
+PWA_APP_NAME = "Meal Planning"
+PWA_APP_DESCRIPTION = "Meal Planning"
+PWA_APP_THEME_COLOR = "#ffffff"
+PWA_APP_BACKGROUND_COLOR = "#ffffff"
+PWA_APP_DISPLAY = "standalone"
+PWA_APP_SCOPE = "/"
+PWA_APP_ORIENTATION = "any"
+PWA_APP_START_URL = "/"
+PWA_APP_STATUS_BAR_COLOR = "default"
+PWA_APP_ICONS = [{"src": "/static/favicon/favicon.png", "sizes": "512x512"}]
+PWA_APP_ICONS_APPLE = [{"src": "/static/favicon/favicon.png", "sizes": "512x512"}]
+PWA_APP_SPLASH_SCREEN = [
+    {
+        "src": "/static/favicon/splashscreen.png",
+        "media": "(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)",
+    }
+]
+PWA_APP_DIR = "ltr"
+PWA_APP_LANG = "en-GB"
