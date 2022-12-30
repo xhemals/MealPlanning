@@ -1,4 +1,5 @@
 from __future__ import print_function
+from datetime import timedelta
 
 import datetime
 import os.path
@@ -124,7 +125,12 @@ def furthestEvent():
                     "meal": f'{event["summary"]}',
                 }
             )
-        firstEntry = next(iter(eventDi))
+        try:
+            firstEntry = next(iter(eventDi))
+        except:
+            today = datetime.datetime.now()
+            yesterday = today - timedelta(days=1)
+            firstEntry = yesterday.strftime("%Y-%m-%d %H:%M:%S")
         return firstEntry
 
     except HttpError as error:
