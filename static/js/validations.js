@@ -1,19 +1,24 @@
 $(document).ready(function () {
+    failedForm = false;
+    fine = false;
     if ($("#id_who_is_eating_0").prop('checked')) {
         disableOnStart();
-    }
+    };
+
     $("#id_who_is_eating_0").on("click", function () {
         disableRest();
-    })
+    });
+
     $("#id_other").hide();
     let checked = $("#id_who_is_eating_5").prop('checked')
     if (checked) {
         $("#id_other").show();
-    }
-    // let executed = false;
+    };
+
     $("#id_who_is_eating_5").on("click", function () {
         $("#id_other").toggle();
     })
+
     // $("#id_who_is_eating_5").on("click", function () {
     //     let checked = $("#id_who_is_eating_5").prop('checked')
     //     if (!checked) {
@@ -43,7 +48,8 @@ $(document).ready(function () {
             event.preventDefault();
             $(this).val(text + ", ");
         }
-    })
+    });
+
     $('#meal_form_id').keypress(function (event) {
         if (event.keyCode == 13) {
             event.preventDefault();
@@ -86,6 +92,7 @@ $(document).ready(function () {
     //         console.log(values);
     //     }
     // });
+
     $('input[type="text"]').keydown(function (e) {
         if (e.key === ' ' && $(this).val().endsWith(' ')) {
             e.preventDefault();
@@ -108,6 +115,7 @@ $(document).ready(function () {
             $(this).val(value.substring(2));
         }
     });
+
     $('input[type="text"]').blur(function () {
         let value = $(this).val();
         if (value.endsWith(' ') || value.endsWith(',') || value.endsWith(', ')) {
@@ -117,15 +125,13 @@ $(document).ready(function () {
             $(this).val(value.substring(0, value.length - 2));
         }
     });
+
     $("#meal_form_id").submit(function () {
-        if ($('input:checkbox').filter(':checked').length < 1) {
-            alert("Please select at least 1 person");
-            return false;
-        }
-        else {
-            fine = true;
+        if (document.getElementById("id_other").value == "") {
+            document.getElementById("id_who_is_eating_5").checked = false;
         }
     });
+
 
     //Loading
     var buttonSubmit = document.getElementById("submit-id-submit");
@@ -144,22 +150,26 @@ $(document).ready(function () {
                 }, 100);
             }
         });
-    }
+    };
 
     if (formMeal) {
         formMeal.addEventListener("submit", function () {
-            if (this.checkValidity()) {
-                if (fine == true) {
-                    buttonSubmit.value = "Loading";
-                    var dots = "";
-                    var interval = setInterval(function () {
-                        dots = (dots.length === 3) ? "" : dots + ".";
-                        buttonSubmit.value = "Loading" + dots;
-                    }, 100);
-                };
+            if ($('#id_who_is_eating_0:checked, #id_who_is_eating_1:checked, #id_who_is_eating_2:checked, #id_who_is_eating_3:checked, #id_who_is_eating_4:checked').length == 0) {
+                alert("Please select at least 1 person from the household");
+                event.preventDefault();
+                document.getElementById('id_who_is_eating_5').prop('checked', true);
+            }
+            else {
+                buttonSubmit.value = "Loading";
+                var dots = "";
+                var interval = setInterval(function () {
+                    dots = (dots.length === 3) ? "" : dots + ".";
+                    buttonSubmit.value = "Loading" + dots;
+                }, 100);
             }
         });
-    }
+    };
+
     if (formDelete) {
         formDelete.addEventListener("submit", function () {
             if (this.checkValidity()) {
@@ -171,7 +181,8 @@ $(document).ready(function () {
                 }, 100);
             };
         });
-    }
+    };
+
     buttonHome.addEventListener("click", function () {
         var dots = "";
         function animateText() {
@@ -183,6 +194,7 @@ $(document).ready(function () {
     var editBtn = document.querySelectorAll("[id^='edit_btn_']");
     for (let element of editBtn) {
         element.addEventListener("click", function () {
+            document.getElementById(element.id).innerHTML = "Loading"
             var count = 0;
             setInterval(function () {
                 count++;
@@ -190,10 +202,12 @@ $(document).ready(function () {
                 document.getElementById(element.id).innerHTML = "Loading" + dots;
             }, 100);
         })
-    }
+    };
+
     var deleteBtn = document.querySelectorAll("[id^='delete_btn_']");
     for (element of deleteBtn) {
         element.addEventListener("click", function () {
+            document.getElementById(element.id).innerHTML = "Loading"
             var count = 0;
             setInterval(function () {
                 count++;
@@ -210,26 +224,18 @@ function disableRest() {
         document.getElementById("id_who_is_eating_2").disabled = false;
         document.getElementById("id_who_is_eating_3").disabled = false;
         document.getElementById("id_who_is_eating_4").disabled = false;
-        document.getElementById("id_who_is_eating_5").disabled = false;
-        if (document.getElementById("id_who_is_eating_5").checked == true) {
-            $("#id_other").show()
-        }
     }
     else {
         document.getElementById("id_who_is_eating_1").disabled = true;
         document.getElementById("id_who_is_eating_2").disabled = true;
         document.getElementById("id_who_is_eating_3").disabled = true;
         document.getElementById("id_who_is_eating_4").disabled = true;
-        document.getElementById("id_who_is_eating_5").disabled = true;
-        $("#id_other").hide()
     }
-}
+};
 
 function disableOnStart() {
     document.getElementById("id_who_is_eating_1").disabled = true;
     document.getElementById("id_who_is_eating_2").disabled = true;
     document.getElementById("id_who_is_eating_3").disabled = true;
     document.getElementById("id_who_is_eating_4").disabled = true;
-    document.getElementById("id_who_is_eating_5").disabled = true;
-    $("#id_other").hide()
-}
+};
