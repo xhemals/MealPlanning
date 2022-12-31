@@ -123,16 +123,18 @@ def mealToDB():
 def viewMeals():
     db = Meal.objects.all()
     eventsLi = []
+    x = 0
     for item in db:
         ordinal = item.date.strftime("%A, %B %d") + suffix(item.date.day)
         eventsLi.append(
             f"""<h3 class='date'>{ordinal}</h3>
-            <a href='/meal/{item.eventID}'><button type='button' class='btn btn-primary'> Edit </button></a> | 
-            <a href='/delete/{item.eventID}'><button type="button" class="btn btn-danger"> Delete </button></a>
+            <a href='/meal/{item.eventID}'><button id="edit_btn_{x}" type='button' class='btn btn-primary'> Edit </button></a> | 
+            <a href='/delete/{item.eventID}'><button id="delete_btn_{x}" type="button" class="btn btn-danger" onclick='loadingDelete()'> Delete </button></a>
             <br>
             <p class='meal'>{item.meal}</p>
             <hr>"""
         )
+        x += 1
     event = "".join(eventsLi)
     return event
 

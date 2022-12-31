@@ -30,6 +30,7 @@ class startForm(forms.Form):
                 "min": self.furthestEvent + timedelta(days=1),
             }
         )
+        self.helper.attrs.update({"id": "start_form_id"})
 
     start_planning_from = forms.DateField(
         widget=forms.DateInput(
@@ -47,7 +48,7 @@ class MealForm(forms.Form):
         self.helper = FormHelper(self)
         self.helper.form_method = "POST"
         self.helper.add_input(Submit("submit", "Submit", css_class="btn btn-success"))
-        self.helper.attrs.update({"id": "form_id"})
+        self.helper.attrs.update({"id": "meal_form_id"})
 
     meal = forms.CharField(required=True)
     who_is_eating = forms.MultipleChoiceField(
@@ -62,7 +63,7 @@ class EditMealForm(forms.Form):
         self.helper = FormHelper(self)
         self.helper.form_method = "POST"
         self.helper.add_input(Submit("submit", "Submit", css_class="btn btn-success"))
-        self.helper.attrs.update({"id": "form_id"})
+        self.helper.attrs.update({"id": "meal_form_id"})
 
     meal = forms.CharField(required=True)
     who_is_eating = forms.MultipleChoiceField(
@@ -76,9 +77,10 @@ class deleteMeal(forms.Form):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper(self)
         self.helper.form_method = "POST"
+        self.helper.attrs.update({"id": "delete_form_id"})
         self.helper.add_input(Submit("submit", "Delete", css_class="btn btn-danger"))
 
-    cornfirm = forms.BooleanField(
+    confirm = forms.BooleanField(
         error_messages={"required": "You must confirm the deletion"},
         label="Confirm",
     )

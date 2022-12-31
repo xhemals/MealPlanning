@@ -44,33 +44,27 @@ $(document).ready(function () {
             $(this).val(text + ", ");
         }
     })
-    $('#form_id').keypress(function (event) {
+    $('#meal_form_id').keypress(function (event) {
         if (event.keyCode == 13) {
             event.preventDefault();
         }
     });
-    var boxNum = 0;
-    $('#div_id_other').keypress(function (event) {
-        const textBoxContainer = document.getElementById("div_id_other");
-        if (event.keyCode == 13) {
-            boxNum++;
-            array = new Array(boxNum);
-            const textBox = document.createElement("input");
-            textBox.type = "text";
-            textBox.name = "other";
-            textBox.className = "textinput textInput form-control";
-            textBox.id = "id_other_" + boxNum;
-            textBox.style = "display: block;";
-            textBoxContainer.appendChild(textBox);
-            document.getElementById('id_other_' + boxNum).focus();
-        }
-    })
-    $("form").submit(function () {
-        if ($('input:checkbox').filter(':checked').length < 1) {
-            alert("Please select at least 1 person");
-            return false;
-        }
-    });
+    // var boxNum = 0;
+    // $('#div_id_other').keypress(function (event) {
+    //     const textBoxContainer = document.getElementById("div_id_other");
+    //     if (event.keyCode == 13) {
+    //         boxNum++;
+    //         array = new Array(boxNum);
+    //         const textBox = document.createElement("input");
+    //         textBox.type = "text";
+    //         textBox.name = "other";
+    //         textBox.className = "textinput textInput form-control";
+    //         textBox.id = "id_other_" + boxNum;
+    //         textBox.style = "display: block;";
+    //         textBoxContainer.appendChild(textBox);
+    //         document.getElementById('id_other_' + boxNum).focus();
+    //     }
+    // })
     // document.querySelector('#submit-id-submit').addEventListener('click', function () {
     //     var values = "";
     //     for (let i = 1; i < array.length; i++) {
@@ -123,7 +117,91 @@ $(document).ready(function () {
             $(this).val(value.substring(0, value.length - 2));
         }
     });
+    $("#meal_form_id").submit(function () {
+        if ($('input:checkbox').filter(':checked').length < 1) {
+            alert("Please select at least 1 person");
+            return false;
+        }
+        else {
+            fine = true;
+        }
+    });
 
+    //Loading
+    var buttonSubmit = document.getElementById("submit-id-submit");
+    var form = document.getElementById("start_form_id");
+    var formMeal = document.getElementById("meal_form_id");
+    var formDelete = document.getElementById("delete_form_id");
+    var buttonHome = document.getElementById("home");
+    if (form) {
+        form.addEventListener("submit", function () {
+            if (this.checkValidity()) {
+                buttonSubmit.value = "Loading";
+                var dots = "";
+                var interval = setInterval(function () {
+                    dots = (dots.length === 3) ? "" : dots + ".";
+                    buttonSubmit.value = "Loading" + dots;
+                }, 100);
+            }
+        });
+    }
+
+    if (formMeal) {
+        formMeal.addEventListener("submit", function () {
+            if (this.checkValidity()) {
+                if (fine == true) {
+                    buttonSubmit.value = "Loading";
+                    var dots = "";
+                    var interval = setInterval(function () {
+                        dots = (dots.length === 3) ? "" : dots + ".";
+                        buttonSubmit.value = "Loading" + dots;
+                    }, 100);
+                };
+            }
+        });
+    }
+    if (formDelete) {
+        formDelete.addEventListener("submit", function () {
+            if (this.checkValidity()) {
+                buttonSubmit.value = "Loading";
+                var dots = "";
+                var interval = setInterval(function () {
+                    dots = (dots.length === 3) ? "" : dots + ".";
+                    buttonSubmit.value = "Loading" + dots;
+                }, 100);
+            };
+        });
+    }
+    buttonHome.addEventListener("click", function () {
+        var dots = "";
+        function animateText() {
+            dots = (dots.length === 3) ? "" : dots + ".";
+            buttonHome.innerHTML = "<b>Loading" + dots + "</b>";
+        }
+        var interval = setInterval(animateText, 100);
+    })
+    var editBtn = document.querySelectorAll("[id^='edit_btn_']");
+    for (let element of editBtn) {
+        element.addEventListener("click", function () {
+            var count = 0;
+            setInterval(function () {
+                count++;
+                var dots = new Array(count % 5).join('.');
+                document.getElementById(element.id).innerHTML = "Loading" + dots;
+            }, 100);
+        })
+    }
+    var deleteBtn = document.querySelectorAll("[id^='delete_btn_']");
+    for (element of deleteBtn) {
+        element.addEventListener("click", function () {
+            var count = 0;
+            setInterval(function () {
+                count++;
+                var dots = new Array(count % 5).join('.');
+                document.getElementById(element.id).innerHTML = "Loading" + dots;
+            }, 100);
+        })
+    }
 });
 
 function disableRest() {
